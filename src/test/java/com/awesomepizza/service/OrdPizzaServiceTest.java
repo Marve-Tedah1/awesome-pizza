@@ -1,7 +1,7 @@
 package com.awesomepizza.service;
 
 import com.awesomepizza.exception.NotFoundException;
-import com.awesomepizza.exception.OrderBadRequestException;
+import com.awesomepizza.exception.OrderConflictException;
 import com.awesomepizza.model.OrdPizza;
 import com.awesomepizza.model.OrdResponses;
 import com.awesomepizza.model.Pizza;
@@ -102,6 +102,6 @@ class OrdPizzaServiceTest {
         OrdPizza ordPizza2 = new OrdPizza(2L, new Pizza(), Stato.ORDINATO);
         when(repository.findById(ordPizza2.getCod())).thenReturn(Optional.of(ordPizza2));
         when(repository.findByStato(Stato.IN_PREPARAZIONE)).thenReturn(ordPizza);
-        assertThrows(OrderBadRequestException.class, ()->service.aggiornaStato(ordPizza2.getCod()));
+        assertThrows(OrderConflictException.class, ()->service.aggiornaStato(ordPizza2.getCod()));
     }
 }

@@ -1,6 +1,6 @@
 package com.awesomepizza.service;
 
-import com.awesomepizza.exception.OrderBadRequestException;
+import com.awesomepizza.exception.OrderConflictException;
 import com.awesomepizza.exception.ExceptionType;
 import com.awesomepizza.exception.NotFoundException;
 import com.awesomepizza.model.OrdPizza;
@@ -66,7 +66,7 @@ public class OrdPizzaService {
         switch (statoOrd) {
             case ORDINATO -> aggiornaStatoInPreparazione(ordPizza.get());
             case IN_PREPARAZIONE -> ordPizza.get().setStato(PRONTO);
-            case PRONTO -> throw new OrderBadRequestException("L'ORDINE RISULTA GIA' PRONTA PER LA CONSEGNA!!", ExceptionType.STATO_NON_VALIDO);
+            case PRONTO -> throw new OrderConflictException("L'ORDINE RISULTA GIA' PRONTA PER LA CONSEGNA!!", ExceptionType.STATO_NON_VALIDO);
         }
         return ordPizzaRepository.save(ordPizza.get());
     }
@@ -74,7 +74,7 @@ public class OrdPizzaService {
     private void aggiornaStatoInPreparazione(OrdPizza ordPizza) {
         OrdPizza byStato = ordPizzaRepository.findByStato(IN_PREPARAZIONE);
         if(byStato != null) {
-            throw new OrderBadRequestException("L'ORDINE PRECEDENTE NON E' ANCORA IN STATO PRONTO");
+            throw new OrderConflictException("L'ORDINE PRECEDENTE NON E' ANCORA IN STATO PRONTO");
         }
         ordPizza.setStato(IN_PREPARAZIONE);
     }

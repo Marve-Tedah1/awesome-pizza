@@ -12,8 +12,8 @@ public class GenericException {
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ex.getMessage());
     }
 
-    @ExceptionHandler(OrderBadRequestException.class)
-    public ResponseEntity<String> handlerBadRequestException(OrderBadRequestException ex){
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ex.getMessage());
+    @ExceptionHandler(OrderConflictException.class)
+    public ResponseEntity<String> handlerBadRequestException(OrderConflictException ex){
+        return ResponseEntity.status(HttpStatus.CONFLICT).body(ex.getMessage());
     }
 }

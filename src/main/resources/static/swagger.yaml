@@ -1,0 +1,157 @@
+openapi: 3.0.1
+info:
+  title: "awesome-pizza"
+  version: v0
+  description: "Api and Models for awesome-pizza"
+servers:
+  - url: http://localhost:8080
+    description: "Server locale di sviluppo"
+paths:
+  /ordine/{id}/aggiorna:
+    put:
+      tags:
+        - pizzaiolo-controller
+      operationId: aggiornaStato
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/OrdPizza'
+        '404':
+          description: request could not be found
+        '409':
+          description: conflict in the current state
+  /ordine/nuovo/{idPizza}:
+    post:
+      tags:
+        - ord-pizza-controller
+      operationId: creaOrdine
+      parameters:
+        - name: idPizza
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/OrdPizza'
+        '404':
+          description: request could not be found
+        default:
+          description: Unexpected error
+  /pizze/{id}:
+    get:
+      tags:
+        - pizza-controller
+      operationId: getPizza
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/Pizza'
+        '404':
+          description: request could not be found
+  /pizze/lista:
+    get:
+      tags:
+        - pizza-controller
+      operationId: getPizze
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Pizza'
+  /ordine/lista:
+    get:
+      tags:
+        - ord-pizza-controller
+      operationId: getOrdini
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/OrdResponses'
+        default:
+          description: Unexpected error
+  /ordine/coda:
+    get:
+      tags:
+        - pizzaiolo-controller
+      operationId: coda
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/OrdPizza'
+components:
+  schemas:
+    OrdPizza:
+      type: object
+      properties:
+        cod:
+          type: integer
+          format: int64
+        pizza:
+          $ref: '#/components/schemas/Pizza'
+        stato:
+          type: string
+          enum:
+            - ORDINATO
+            - IN_PREPARAZIONE
+            - PRONTO
+    Pizza:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+        name:
+          type: string
+        price:
+          type: number
+          format: double
+        ingredients:
+          type: string
+    OrdResponses:
+      type: object
+      properties:
+        CodiceOrdine:
+          type: integer
+          format: int64
+        StatoOrdine:
+          type: string
