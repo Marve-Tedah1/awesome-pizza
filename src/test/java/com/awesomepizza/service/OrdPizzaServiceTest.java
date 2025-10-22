@@ -104,4 +104,18 @@ class OrdPizzaServiceTest {
         when(repository.findByStato(Stato.IN_PREPARAZIONE)).thenReturn(ordPizza);
         assertThrows(OrderConflictException.class, ()->service.aggiornaStato(ordPizza2.getCod()));
     }
+
+    @Test
+    void annullaOrdine() {
+        when(repository.findById(anyLong())).thenReturn(Optional.of(new OrdPizza()));
+        service.annullaOrdine(1L);
+        verify(repository).findById(1L);
+        verify(repository).deleteById(1L);
+    }
+
+    @Test
+    void annullaOrdineException(){
+        when(repository.findById(anyLong())).thenThrow(new NotFoundException("ERRORE"));
+        assertThrows(NotFoundException.class, ()->service.annullaOrdine(null));
+    }
 }
