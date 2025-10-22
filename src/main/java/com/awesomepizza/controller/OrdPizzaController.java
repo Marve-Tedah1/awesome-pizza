@@ -29,4 +29,10 @@ public class OrdPizzaController {
         OrdPizza ordPizza = ordPizzaService.nuovo(idPizza);
         return ResponseEntity.status(HttpStatus.CREATED).body(ordPizza);
     }
+
+    @DeleteMapping("/{codOrdine}/annulla")
+    public ResponseEntity<Void> annullaOrdine(@PathVariable Long codOrdine){
+        ordPizzaService.annullaOrdine(codOrdine);
+        return ResponseEntity.noContent().build();
+    }
 }

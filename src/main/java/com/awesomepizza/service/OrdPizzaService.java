@@ -57,10 +57,10 @@ public class OrdPizzaService {
        return ordPizzaRepository.findByStatoIn(stati);
     }
 
-    public OrdPizza aggiornaStato(Long id){
-        Optional<OrdPizza> ordPizza = ordPizzaRepository.findById(id);
+    public OrdPizza aggiornaStato(Long codOrdine){
+        Optional<OrdPizza> ordPizza = ordPizzaRepository.findById(codOrdine);
         if (ordPizza.isEmpty()){
-            throw new NotFoundException("NON ESISTE PIZZA CON ID: "+id, ExceptionType.RISULTATO_DELLA_QUERY_NULL);
+            throw new NotFoundException("NON ESISTE ORDINE CON CODICE: "+codOrdine, ExceptionType.RISULTATO_DELLA_QUERY_NULL);
         }
         Stato statoOrd = ordPizza.get().getStato();
         switch (statoOrd) {
@@ -77,5 +77,13 @@ public class OrdPizzaService {
             throw new OrderConflictException("L'ORDINE PRECEDENTE NON E' ANCORA IN STATO PRONTO");
         }
         ordPizza.setStato(IN_PREPARAZIONE);
+    }
+
+    public void annullaOrdine(Long codOrdine){
+        Optional<OrdPizza> ordPizza = ordPizzaRepository.findById(codOrdine);
+        if (ordPizza.isEmpty()){
+            throw new NotFoundException("NON ESISTE ORDINE CON CODICE: "+codOrdine, ExceptionType.RISULTATO_DELLA_QUERY_NULL);
+        }
+        ordPizzaRepository.deleteById(codOrdine);
     }
 }

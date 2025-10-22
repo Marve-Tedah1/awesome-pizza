@@ -53,6 +53,23 @@ paths:
           description: request could not be found
         default:
           description: Unexpected error
+  /ordine/{codOrdine}/annulla:
+    delete:
+      tags:
+        - ord-pizza-controller
+      operationId: annullaOrdine
+      parameters:
+        - name: codOrdine
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '204':
+          description: No Content
+        '404':
+          description: request could not be found
   /pizze/{id}:
     get:
       tags:
